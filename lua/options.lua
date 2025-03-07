@@ -1,7 +1,8 @@
 -- See `:help vim.opt` and `:help option-list`
 local set = vim.opt
 
-vim.g.joplin_token = '4c3a329846c9ea4ba2e84a551f3a377ec96e44ff9bdeac5d867596978e20d11c13ea884d60141e21ab915cb01d1112f0643a6918b0be92717a86139a53175ded'
+vim.g.joplin_token =
+    "4c3a329846c9ea4ba2e84a551f3a377ec96e44ff9bdeac5d867596978e20d11c13ea884d60141e21ab915cb01d1112f0643a6918b0be92717a86139a53175ded"
 
 -- Make line numbers default
 set.number = true
@@ -9,7 +10,7 @@ set.number = true
 set.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-set.mouse = 'a'
+set.mouse = "a"
 
 -- Don't show the mode, since it's already in status line
 set.showmode = false
@@ -17,8 +18,10 @@ set.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
---  Must have a clipboard installed - I am using `xclip`
-set.clipboard = 'unnamedplus'
+--  Must have a clipboard installed - I am using `xclip` or `xsel`
+vim.schedule(function()
+    set.clipboard = "unnamedplus"
+end)
 
 -- Enable break indent
 set.breakindent = true
@@ -31,7 +34,7 @@ set.ignorecase = true
 set.smartcase = true
 
 -- Keep signcolumn on by default
-set.signcolumn = 'yes'
+set.signcolumn = "yes"
 
 -- Decrease update time
 set.updatetime = 250
@@ -45,10 +48,10 @@ set.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 set.list = true
-set.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+set.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Preview substitutions live, as you type!
-set.inccommand = 'split'
+set.inccommand = "split"
 
 -- Show which line your cursor is on
 set.cursorline = true
@@ -63,4 +66,4 @@ set.softtabstop = 4
 set.shiftwidth = 4
 
 -- Color Column for line lengths
-set.colorcolumn = '80'
+set.colorcolumn = "80"
