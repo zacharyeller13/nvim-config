@@ -1,5 +1,5 @@
 -- Run python code in a new terminal
-vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
+vim.keymap.set("n", "<space><space>x", "<cmd>term python3 %<CR>")
 -- local ok, err = pcall(vim.api.nvim_cmd, { cmd = 'vsplit' }, {})
 -- if not ok then
 --     vim.print(ok, err)

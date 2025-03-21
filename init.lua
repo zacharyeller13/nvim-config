@@ -87,7 +87,8 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
     vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-end ---@diagnostic disable-next-line: undefined-field
+end
+---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
@@ -492,9 +493,10 @@ require("lazy").setup({
             --  By default, Neovim doesn't support everything that is in the LSP Specification.
             --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
             --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-
-            -- With blink.cmp this can be simplified
-            local capabilities = require("blink.cmp").get_lsp_capabilities({}, true)
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            -- Not using nvim-cmp anymore
+            -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+            capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
             -- Enable the following language servers
             --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -573,10 +575,12 @@ require("lazy").setup({
                                 checkThirdParty = false,
                                 -- Tells lua_ls where to find all the Lua files that you have loaded
                                 -- for your neovim configuration.
-                                -- library = vim.api.nvim_get_runtime_file("", true),
+                                library = {
+                                    "${3rd}/luv/library",
+                                    unpack(vim.api.nvim_get_runtime_file("", true)),
+                                },
                                 -- If lua_ls is really slow on your computer, you can try this instead:
                                 -- library = { vim.env.VIMRUNTIME },
-                                library = vim.api.nvim_get_runtime_file("", true),
                             },
                             completion = {
                                 callSnippet = "Replace",
@@ -713,7 +717,7 @@ require("lazy").setup({
                     "vim",
                     "vimdoc",
                     "xml",
-                    "yaml",
+                    "query",
                 },
                 -- Autoinstall languages that are not installed
                 auto_install = true,
