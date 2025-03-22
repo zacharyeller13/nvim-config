@@ -7,8 +7,8 @@ local function replace_toc(args)
 
     for idx, line in pairs(lines) do
         -- print(key, value)
-        if line == "[toc]" then
-            vim.api.nvim_buf_set_lines(0, idx - 1, idx, false, { "<!-- mtoc-start -->", "<!-- mtoc-end -->" })
+        if line == '[toc]' then
+            vim.api.nvim_buf_set_lines(0, idx - 1, idx, false, { '<!-- mtoc-start -->', '<!-- mtoc-end -->' })
             vim.cmd.Mtoc()
             -- Early return a little bit
             return
@@ -19,25 +19,30 @@ end
 ---Formats a markdown table in visual mode and then returns to normal mode
 ---Thanks to https://heitorpb.github.io/bla/format-tables-in-vim/
 local function format_table()
-    local start = vim.api.nvim_buf_get_mark(0, "<")[1]
-    local end_idx = vim.api.nvim_buf_get_mark(0, ">")[1]
-    vim.api.nvim_cmd({ range = { start, end_idx }, cmd = "!", args = { "tr -s ' ' | column -t -s '|' -o '|'" } }, {})
-    local key = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-    vim.api.nvim_feedkeys(key, "v", false)
+    local start = vim.fn.getpos('v')
+    vim.print('start: ', start)
+    local end_idx = vim.fn.getpos('.')
+    vim.print('end: ', end_idx)
+    vim.api.nvim_cmd(
+        { range = { start[2], end_idx[2] }, cmd = '!', args = { 'column', '-t', '-s', "'|'", '-o', "'|'" } },
+        {}
+    )
+    local key = vim.api.nvim_replace_termcodes('<Esc>', true, false, true)
+    vim.api.nvim_feedkeys(key, 'v', false)
 end
 
 vim.api.nvim_buf_create_user_command(
     0,
-    "ReplaceToc",
+    'ReplaceToc',
     replace_toc,
     { desc = "Finds and replaces '[toc]' in markdown file" }
 )
 
 -- Kemaps
 local map = vim.keymap.set
-local opts = { noremap = true, silent = true, buffer = true, desc = "Markdown TOC" }
-map("n", "<leader>md", vim.cmd.Mtoc, opts)
-opts = vim.tbl_extend("force", opts, { desc = "Replace [TOC]" })
-map("n", "<leader>toc", vim.cmd.ReplaceToc, opts)
+local opts = { noremap = true, silent = true, buffer = true, desc = 'Markdown TOC' }
+map('n', '<leader>md', vim.cmd.Mtoc, opts)
+opts = vim.tbl_extend('force', opts, { desc = 'Replace [TOC]' })
+map('n', '<leader>toc', vim.cmd.ReplaceToc, opts)
 
-map("v", "<leader>f", format_table, { desc = "[F]ormat markdown table" })
+map('v', '<leader>f', format_table, { desc = '[F]ormat markdown table' })
