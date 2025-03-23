@@ -1,30 +1,13 @@
 -- Run python code in a new terminal
-vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
--- local ok, err = pcall(vim.api.nvim_cmd, { cmd = 'vsplit' }, {})
--- if not ok then
---     vim.print(ok, err)
--- else
---     vim.api.nvim_cmd({ cmd = 'terminal' }, {})
---     vim.print(vim.b.terminal_job_id)
--- end
---
--- vim.api.nvim_chan_send(7, 'python3\n')
--- vim.print(vim.api.nvim_list_chans())
---
--- local chan = 7
---
--- ---Send to term
--- ---@param cmd string
--- local send = function(cmd)
---     if cmd:sub(-1) ~= '\n' then
---         cmd = cmd .. '\n'
---     end
---     vim.api.nvim_chan_send(chan, cmd)
--- end
--- local com = [[
--- if (1 == 1):
---     print("hello world")
---
--- ]]
--- send(com)
--- vim.print(vim.api.nvim_get_chan_info(7))
+-- vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
+
+local repl = require('custom.dev')
+
+local com = "print('hello world')\n"
+
+vim.keymap.set('n', '<space><space>t', function()
+    repl:create_term()
+end)
+vim.keymap.set('n', '<space><space>x', function()
+    repl:send(com)
+end)
