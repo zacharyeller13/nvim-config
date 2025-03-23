@@ -126,7 +126,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
     local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-    vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
+    vim.fn.system({ 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath })
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
@@ -200,7 +200,7 @@ require('lazy').setup({
             -- ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
             -- ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
             -- }
-            require('which-key').add {
+            require('which-key').add({
                 --false Suggested Spec:
                 { '<leader>c', name = '[C]ode', group = '[C]ode' },
                 { '<leader>c_', hidden = true },
@@ -212,7 +212,7 @@ require('lazy').setup({
                 { '<leader>s_', hidden = true },
                 { '<leader>w', group = '[W]orkspace' },
                 { '<leader>w_', hidden = true },
-            }
+            })
         end,
     },
 
@@ -270,7 +270,7 @@ require('lazy').setup({
 
             -- [[ Configure Telescope ]]
             -- See `:help telescope` and `:help telescope.setup()`
-            require('telescope').setup {
+            require('telescope').setup({
                 -- You can put your default mappings / updates / etc. in here
                 --  All the info you're looking for is in `:help telescope.setup()`
                 --
@@ -292,7 +292,7 @@ require('lazy').setup({
                         require('telescope.themes').get_dropdown(),
                     },
                 },
-            }
+            })
 
             -- Enable telescope extensions, if they are installed
             if pcall(require('telescope').load_extension, 'fzf') then
@@ -316,24 +316,24 @@ require('lazy').setup({
             -- Slightly advanced example of overriding default behavior and theme
             vim.keymap.set('n', '<leader>/', function()
                 -- You can pass additional configuration to telescope to change theme, layout, etc.
-                builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+                builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown({
                     winblend = 10,
                     previewer = false,
-                })
+                }))
             end, { desc = '[/] Fuzzily search in current buffer' })
 
             -- Also possible to pass additional configuration options.
             --  See `:help telescope.builtin.live_grep()` for information about particular keys
             vim.keymap.set('n', '<leader>s/', function()
-                builtin.live_grep {
+                builtin.live_grep({
                     grep_open_files = true,
                     prompt_title = 'Live Grep in Open Files',
-                }
+                })
             end, { desc = '[S]earch [/] in Open Files' })
 
             -- Shortcut for searching your neovim configuration files
             vim.keymap.set('n', '<leader>sn', function()
-                builtin.find_files { cwd = vim.fn.stdpath('config') }
+                builtin.find_files({ cwd = vim.fn.stdpath('config') })
             end, { desc = '[S]earch [N]eovim files' })
         end,
     },
@@ -429,7 +429,11 @@ require('lazy').setup({
 
                     -- Fuzzy find all the symbols in your current workspace
                     --  Similar to document symbols, except searches over your whole project.
-                    map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+                    map(
+                        '<leader>ws',
+                        require('telescope.builtin').lsp_dynamic_workspace_symbols,
+                        '[W]orkspace [S]ymbols'
+                    )
 
                     -- Rename the variable under your cursor
                     --  Most Language Servers support renaming across files, etc.
@@ -576,9 +580,9 @@ require('lazy').setup({
                 'xmlformatter',
                 'sql-formatter',
             })
-            require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+            require('mason-tool-installer').setup({ ensure_installed = ensure_installed })
 
-            require('mason-lspconfig').setup {
+            require('mason-lspconfig').setup({
                 handlers = {
                     function(server_name)
                         local server = servers[server_name] or {}
@@ -589,7 +593,7 @@ require('lazy').setup({
                         require('lspconfig')[server_name].setup(server)
                     end,
                 },
-            }
+            })
         end,
     },
 
@@ -613,7 +617,12 @@ require('lazy').setup({
     },
 
     -- Highlight todo, notes, etc in comments
-    { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+    {
+        'folke/todo-comments.nvim',
+        event = 'VimEnter',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        opts = { signs = false },
+    },
 
     { -- Collection of various small independent plugins/modules
         'echasnovski/mini.nvim',
@@ -624,7 +633,7 @@ require('lazy').setup({
             --  - va)  - [V]isually select [A]round [)]paren
             --  - yinq - [Y]ank [I]nside [N]ext [']quote
             --  - ci'  - [C]hange [I]nside [']quote
-            require('mini.ai').setup { n_lines = 500 }
+            require('mini.ai').setup({ n_lines = 500 })
 
             -- Add/delete/replace surroundings (brackets, quotes, etc.)
             --
@@ -638,7 +647,7 @@ require('lazy').setup({
             --  and try some other statusline plugin
             local statusline = require('mini.statusline')
             -- set use_icons to true if you have a Nerd Font
-            statusline.setup { use_icons = vim.g.have_nerd_font }
+            statusline.setup({ use_icons = vim.g.have_nerd_font })
 
             -- You can configure sections in the statusline by overriding their
             -- default behavior. For example, here we set the section for
@@ -664,13 +673,28 @@ require('lazy').setup({
             -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
             ---@diagnostic disable-next-line: missing-fields
-            require('nvim-treesitter.configs').setup {
-                ensure_installed = { 'hurl', 'bash', 'python', 'c', 'diff', 'groovy', 'html', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'xml' },
+            require('nvim-treesitter.configs').setup({
+                ensure_installed = {
+                    'hurl',
+                    'bash',
+                    'python',
+                    'c',
+                    'diff',
+                    'groovy',
+                    'html',
+                    'lua',
+                    'markdown',
+                    'markdown_inline',
+                    'vim',
+                    'vimdoc',
+                    'xml',
+                    'yaml',
+                },
                 -- Autoinstall languages that are not installed
                 auto_install = true,
                 highlight = { enable = true },
                 indent = { enable = true },
-            }
+            })
 
             -- There are additional nvim-treesitter modules that you can use to interact
             -- with nvim-treesitter. You should go explore a few and see what interests you:
