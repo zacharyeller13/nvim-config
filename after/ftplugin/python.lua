@@ -1,23 +1,23 @@
 -- Run python code in a new terminal
 -- vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
 
-local repl = require("custom.dev")
+local term = require("custom.term")
 
-repl.callback = function()
-    repl:send("uv run python\n")
+term.callback = function()
+    term:send("uv run python\n")
 end
 
 local com = "     print('hello world')\n"
 
 vim.keymap.set("n", "<space><space>t", function()
-    repl:create_term()
+    term:create_term()
 end, { buffer = true })
 
 vim.keymap.set("n", "<space><space>x", function()
     com, _ = com:gsub("^ +", "")
-    repl:send(com)
+    term:send(com)
 end, { buffer = true })
 
 vim.keymap.set("n", "<space>t", function()
-    repl:toggle()
+    term:toggle()
 end)

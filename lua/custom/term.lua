@@ -1,10 +1,3 @@
---vim.api.nvim_win_hide
---vim.api.nvim_open_win({buffer}, {enter}, {config})
---vim.api.nvim_get_current_win or 0 for current window
---vim.api.nvim_list_chans
---vim.api.nvim_list_wins
---vim.api.nvim_list_bufs
-
 ---@class TerminalState
 ---Currently open terminal channel
 ---@field chan integer?
@@ -17,12 +10,12 @@
 ---| 'above'
 ---| 'below'
 ---Callback to run when opening a new terminal
----@field callback function?
+---@field callback function
 local M = {
     chan = nil,
     bufnr = nil,
     split_dir = "right",
-    callback = nil,
+    callback = function() end,
 }
 M.__index = M
 
@@ -64,7 +57,6 @@ function M:create_term(split_dir)
     if not ok then
         vim.notify("Error: " .. result, vim.log.levels.WARN)
     else
-        vim.notify("WinID: " .. result, vim.log.levels.INFO)
         vim.api.nvim_cmd({ cmd = "terminal" }, {})
         self.chan = vim.b.terminal_job_id
         self.callback()
