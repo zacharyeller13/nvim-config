@@ -298,6 +298,17 @@ require("lazy").setup({
         end,
     },
 
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
     { -- LSP Configuration & Plugins
         "neovim/nvim-lspconfig",
         dependencies = {
@@ -309,19 +320,6 @@ require("lazy").setup({
             -- Useful status updates for LSP.
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
             { "j-hui/fidget.nvim", opts = {} },
-
-            -- Give me lua info!
-            {
-                "folke/lazydev.nvim",
-                ft = "lua", -- only load on lua files
-                opts = {
-                    library = {
-                        -- See the configuration section for more details
-                        -- Load luvit types when the `vim.uv` word is found
-                        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-                    },
-                },
-            },
         },
         config = function()
             -- Brief Aside: **What is LSP?**
@@ -570,13 +568,9 @@ require("lazy").setup({
                                 checkThirdParty = false,
                                 -- Tells lua_ls where to find all the Lua files that you have loaded
                                 -- for your neovim configuration.
-                                library = {
-                                    "${3rd}/luv/library",
-                                    -- unpack(vim.api.nvim_get_runtime_file("", true)),
-                                    vim.env.VIMRUNTIME,
-                                },
+                                -- library = vim.api.nvim_get_runtime_file("", true),
                                 -- If lua_ls is really slow on your computer, you can try this instead:
-                                -- library = { vim.env.VIMRUNTIME },
+                                library = { vim.env.VIMRUNTIME },
                             },
                             completion = {
                                 callSnippet = "Replace",
