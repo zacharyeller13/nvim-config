@@ -1,49 +1,3 @@
---[[
-What is Kickstart?
-
-  Kickstart.nvim is *not* a distribution.
-
-  Kickstart.nvim is a starting point for your own configuration.
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
-
-    After understanding a bit more about Lua, you can use `:help lua-guide` as a
-    reference for how Neovim integrates Lua.
-    - :help lua-guide
-    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
-
-Kickstart Guide:
-
-  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
-
-    If you don't know what this means, type the following:
-      - <escape key>
-      - :
-      - Tutor
-      - <enter key>
-
-    (If you already know how the Neovim basics, you can skip this step)
-
-  Once you've completed that, you can continue working through **AND READING** the rest
-  of the kickstart init.lua
-
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
-
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite neovim features.
-
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not sure exactly what you're looking for.
-
-  I have left several `:help X` comments throughout the init.lua
-
-If you experience any errors while trying to install kickstart, run `:checkhealth` for more info
-
---]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -76,8 +30,6 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Diagnostic keymaps
--- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
--- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
 vim.keymap.set("n", "[d", function()
     vim.diagnostic.jump({ count = -1, wrap = true, float = true })
 end, { desc = "Go to previous [D]iagnostic message" })
@@ -113,7 +65,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
     group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
     callback = function()
-        vim.highlight.on_yank()
+        vim.hl.on_yank()
+        -- deprecated
+        -- vim.highlight.on_yank()
     end,
 })
 
@@ -502,6 +456,7 @@ require("lazy").setup({
                         })
                     end
 
+                    -- Toggle inlay hints
                     if
                         client
                         and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
@@ -514,8 +469,7 @@ require("lazy").setup({
                 end,
             })
 
-            -- TODO: vim.diagnostic.config
-            -- Especially virtual_text/virtual_lines
+            -- diagnostic info
             vim.diagnostic.config({
                 severity_sort = true,
                 float = { border = "rounded", source = "if_many" },
@@ -618,7 +572,8 @@ require("lazy").setup({
                                 -- for your neovim configuration.
                                 library = {
                                     "${3rd}/luv/library",
-                                    vim.api.nvim_get_runtime_file("", true),
+                                    -- unpack(vim.api.nvim_get_runtime_file("", true)),
+                                    vim.env.VIMRUNTIME,
                                 },
                                 -- If lua_ls is really slow on your computer, you can try this instead:
                                 -- library = { vim.env.VIMRUNTIME },
@@ -628,7 +583,6 @@ require("lazy").setup({
                             },
                             -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
                             -- diagnostics = { disable = { 'missing-fields' } },
-                            -- diagnostics = { workspaceDelay = -1 },
                         },
                     },
                 },

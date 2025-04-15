@@ -2,27 +2,25 @@
 --  See `:help vim.keymap.set()`
 
 -- Move quickfix list, apparently will be autoset in nvim 0.11
-vim.keymap.set("n", "[q", function()
-    if #vim.fn.getqflist() ~= 0 then
-        return vim.cmd.cprev()
-    end
-end, { desc = "Go to previous [Q]uickfix item" })
-vim.keymap.set("n", "]q", function()
-    if #vim.fn.getqflist() ~= 0 then
-        return vim.cmd.cnext()
-    end
-end, { desc = "Go to next [Q]uickfix item" })
+if not vim.fn.has("nvim-0.11") == 1 then
+    vim.keymap.set("n", "[q", function()
+        if #vim.fn.getqflist() ~= 0 then
+            return vim.cmd.cprev()
+        end
+    end, { desc = "Go to previous [Q]uickfix item" })
+    vim.keymap.set("n", "]q", function()
+        if #vim.fn.getqflist() ~= 0 then
+            return vim.cmd.cnext()
+        end
+    end, { desc = "Go to next [Q]uickfix item" })
+end
 
 -- Run lua code when necessary
 vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 vim.keymap.set("n", "<space>x", ":.lua<CR>")
 vim.keymap.set("v", "<space>x", ":lua<CR>")
 
--- Setup to use netrw
--- vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
--- Setup to use netrw
--- vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = 'Open Files' })
--- Setup to use mini.files instead
+-- Setup to use mini.files
 vim.keymap.set("n", "<leader>pv", function()
     -- Defined when in init.lua we run require('mini.files').setup()
     MiniFiles.open()
