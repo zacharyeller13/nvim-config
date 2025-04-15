@@ -76,8 +76,14 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
+-- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
+-- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
+vim.keymap.set("n", "[d", function()
+    vim.diagnostic.jump({ count = -1, wrap = true, float = true })
+end, { desc = "Go to previous [D]iagnostic message" })
+vim.keymap.set("n", "]d", function()
+    vim.diagnostic.jump({ count = 1, wrap = true, float = true })
+end, { desc = "Go to previous [D]iagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
@@ -495,11 +501,47 @@ require("lazy").setup({
                             end,
                         })
                     end
+
+                    if
+                        client
+                        and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
+                    then
+                        map("<leader>th", function()
+                            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+                            vim.print(vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+                        end, "[T]oggle Inlay [H]ints")
+                    end
                 end,
             })
 
             -- TODO: vim.diagnostic.config
-            -- Especially virutal_text/virtual_lines
+            -- Especially virtual_text/virtual_lines
+            vim.diagnostic.config({
+                severity_sort = true,
+                float = { border = "rounded", source = "if_many" },
+                underline = { severity = vim.diagnostic.severity.ERROR },
+                signs = vim.g.have_nerd_font and {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = "󰅚 ",
+                        [vim.diagnostic.severity.WARN] = "󰀪 ",
+                        [vim.diagnostic.severity.INFO] = "󰋽 ",
+                        [vim.diagnostic.severity.HINT] = "󰌶 ",
+                    },
+                } or {},
+                virtual_text = {
+                    source = "if_many",
+                    spacing = 2,
+                    format = function(diagnostic)
+                        local diagnostic_message = {
+                            [vim.diagnostic.severity.ERROR] = diagnostic.message,
+                            [vim.diagnostic.severity.WARN] = diagnostic.message,
+                            [vim.diagnostic.severity.INFO] = diagnostic.message,
+                            [vim.diagnostic.severity.HINT] = diagnostic.message,
+                        }
+                        return diagnostic_message[diagnostic.severity]
+                    end,
+                },
+            })
 
             -- LSP servers and clients are able to communicate to each other what features they support.
             --  By default, Neovim doesn't support everything that is in the LSP Specification.
@@ -518,7 +560,6 @@ require("lazy").setup({
             --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
             --  - settings (table): Override the default settings passed when initializing the server.
             --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-            capabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
             local servers = {
                 -- clangd = {},
                 csharp_ls = {},
@@ -577,7 +618,7 @@ require("lazy").setup({
                                 -- for your neovim configuration.
                                 library = {
                                     "${3rd}/luv/library",
-                                    unpack(vim.api.nvim_get_runtime_file("", true)),
+                                    vim.api.nvim_get_runtime_file("", true),
                                 },
                                 -- If lua_ls is really slow on your computer, you can try this instead:
                                 -- library = { vim.env.VIMRUNTIME },
@@ -587,6 +628,7 @@ require("lazy").setup({
                             },
                             -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
                             -- diagnostics = { disable = { 'missing-fields' } },
+                            -- diagnostics = { workspaceDelay = -1 },
                         },
                     },
                 },
