@@ -7,15 +7,18 @@ term.callback = function()
     term:send("uv run python\n")
 end
 
-local com = "     print('hello world')\n"
-
 vim.keymap.set("n", "<space><space>t", function()
     term:create_term()
 end, { buffer = true })
 
-vim.keymap.set("n", "<space><space>x", function()
-    com, _ = com:gsub("^ +", "")
-    term:send(com)
+vim.keymap.set("v", "<space><space>x", function()
+    local start = vim.fn.getpos("v")[2] - 1
+    local end_idx = vim.fn.getpos(".")[2]
+    local com = vim.api.nvim_buf_get_lines(0, start, end_idx, true)
+    vim.print(com)
+
+    -- com, _ = com:gsub("^ +", "")
+    -- term:send(com)
 end, { buffer = true })
 
 vim.keymap.set("n", "<space>t", function()
