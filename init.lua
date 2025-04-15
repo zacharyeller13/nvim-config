@@ -409,27 +409,16 @@ require("lazy").setup({
                     --  For example, in C this would take you to the header
                     map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
-                    -- Copied from kickstart for convenience
-                    ---@param client vim.lsp.Client
-                    ---@param method vim.lsp.protocol.Method
-                    ---@param bufnr? integer
-                    local function client_supports_method(client, method, bufnr)
-                        if vim.fn.has("nvim-0.11") == 1 then
-                            return client:supports_method(method, bufnr)
-                        else
-                            return client.supports_method(method, { bufnr = bufnr })
-                        end
-                    end
-
                     -- The following two autocommands are used to highlight references of the
                     -- word under your cursor when your cursor rests there for a little while.
                     --    See `:help CursorHold` for information about when this is executed
                     --
                     -- When you move your cursor, the highlights will be cleared (the second autocommand).
+                    ---@type vim.lsp.Client
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
                     if
                         client
-                        and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_Highlight, event.buf)
+                        and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
                     then
                         local highlight_augroup =
                             vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
@@ -457,7 +446,7 @@ require("lazy").setup({
                     -- Toggle inlay hints
                     if
                         client
-                        and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
+                        and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
                     then
                         map("<leader>th", function()
                             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
@@ -501,7 +490,7 @@ require("lazy").setup({
             --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
 
             -- With blink.cmp this can be simplified
-            local capabilities = require("blink.cmp").get_lsp_capabilities()
+            local capabilities = require("blink.cmp").get_lsp_capabilities({}, true)
 
             -- Enable the following language servers
             --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -570,7 +559,8 @@ require("lazy").setup({
                                 -- for your neovim configuration.
                                 -- library = vim.api.nvim_get_runtime_file("", true),
                                 -- If lua_ls is really slow on your computer, you can try this instead:
-                                library = { vim.env.VIMRUNTIME },
+                                -- library = { vim.env.VIMRUNTIME },
+                                library = vim.api.nvim_get_runtime_file("", true),
                             },
                             completion = {
                                 callSnippet = "Replace",

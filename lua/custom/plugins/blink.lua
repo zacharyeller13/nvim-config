@@ -56,7 +56,7 @@ return {
             -- default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, via `opts_extend`
             sources = {
-                default = { "lazydev", "lsp", "path", "snippets", "buffer", "markdown" },
+                default = { "lsp", "path", "snippets", "buffer", "markdown", "lazydev" },
 
                 per_filetype = {
                     sql = { "dbee", "buffer" },
@@ -81,7 +81,9 @@ return {
                 -- cmdline = {},
             },
 
-            -- experimental signature help support
+            -- A fuzzy finder, there is also a rust implementation
+            fuzzy = { implementation = "lua" },
+
             signature = { enabled = true },
             completion = {
                 menu = {
