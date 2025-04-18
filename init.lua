@@ -503,6 +503,18 @@ require("lazy").setup({
             --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
             local servers = {
                 -- clangd = {},
+                groovyls = {
+                    settings = {
+                        groovy = {
+                            classpath = {
+                                vim.fn.getenv("HOME")
+                                    .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21.jar",
+                                vim.fn.getenv("HOME")
+                                    .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21-indy.jar",
+                            },
+                        },
+                    },
+                },
                 csharp_ls = {},
                 gopls = {},
                 pyright = {
