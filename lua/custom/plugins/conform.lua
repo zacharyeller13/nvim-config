@@ -26,6 +26,8 @@ return {
                 -- javascript = { { "prettierd", "prettier" } },
                 sql = { "sql_formatter" },
                 xml = { "xmlformatter" },
+                -- I always have jq installed already, so no need to have a separate install for neovim
+                json = { "jq" },
             },
             formatters = {
                 sql_formatter = {
