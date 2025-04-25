@@ -12,9 +12,13 @@ vim.keymap.set("n", "<space><space>t", function()
 end, { buffer = true })
 
 vim.keymap.set("v", "<space><space>x", function()
-    local start = vim.fn.getpos("v")[2] - 1
+    local start = vim.fn.getpos("v")[2]
     local end_idx = vim.fn.getpos(".")[2]
-    local com = vim.api.nvim_buf_get_lines(0, start, end_idx, true)
+
+    if start > end_idx then
+        start, end_idx = end_idx, start
+    end
+    local com = vim.api.nvim_buf_get_lines(0, start - 1, end_idx, true)
     vim.print(com)
 
     -- com, _ = com:gsub("^ +", "")
