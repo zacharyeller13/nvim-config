@@ -46,7 +46,7 @@ function M:create_term(split_dir)
 
     self.split_dir = split_dir
 
-    if self.chan then
+    if self.chan and not vim.tbl_isempty(vim.api.nvim_get_chan_info(self.chan)) then
         vim.notify("Terminal already running, opening", vim.log.levels.WARN)
         self:toggle()
         return
