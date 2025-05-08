@@ -507,20 +507,6 @@ require("lazy").setup({
             --  - settings (table): Override the default settings passed when initializing the server.
             --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
             local servers = {
-                -- clangd = {},
-                groovyls = {
-                    settings = {
-                        groovy = {
-                            classpath = {
-                                vim.fn.getenv("HOME")
-                                    .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21.jar",
-                                vim.fn.getenv("HOME")
-                                    .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21-indy.jar",
-                            },
-                        },
-                    },
-                },
-                csharp_ls = {},
                 gopls = {},
                 pyright = {
                     capabilities = capabilities,
@@ -588,6 +574,30 @@ require("lazy").setup({
                     },
                 },
             }
+
+            -- Only install csharp_ls if dotnet is installed
+            if vim.fn.executable("dotnet") == 1 then
+                servers = vim.tbl_deep_extend("force", servers, { csharp_ls = {} })
+            end
+
+            -- Only install groovyls if groovy is installed
+            -- If we're looking to install it, may need to adjust the classpaths below
+            if vim.fn.executable("groovy") == 1 then
+                servers = vim.tbl_deep_extend("force", servers, {
+                    groovyls = {
+                        settings = {
+                            groovy = {
+                                classpath = {
+                                    vim.fn.getenv("HOME")
+                                        .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21.jar",
+                                    vim.fn.getenv("HOME")
+                                        .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21-indy.jar",
+                                },
+                            },
+                        },
+                    },
+                })
+            end
 
             -- Ensure the servers and tools above are installed
             --  To check the current status of installed tools and/or manually install
