@@ -82,7 +82,7 @@ return {
             },
 
             -- A fuzzy finder, there is also a rust implementation
-            fuzzy = { implementation = "lua" },
+            fuzzy = { implementation = "prefer_rust_with_warning" },
 
             signature = { enabled = true },
             completion = {
