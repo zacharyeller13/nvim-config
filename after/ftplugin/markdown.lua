@@ -46,5 +46,19 @@ map("n", "<leader>md", vim.cmd.Mtoc, opts)
 opts = vim.tbl_extend("force", opts, { desc = "Replace [TOC]" })
 map("n", "<leader>toc", vim.cmd.ReplaceToc, opts)
 
+---Get every table range so we can format it later
+local function test_treesitter()
+    local query = vim.treesitter.query.parse("markdown", "((pipe_table) @tbl)")
+    vim.print(query)
+    local parser = vim.treesitter.get_parser(0, "markdown")
+    local tree = parser:parse()[1]
+
+    for id, node, metadata in query:iter_captures(tree:root(), 0, 0, -1) do
+        local start_row, _, end_row, _ = node:range()
+        vim.print(start_row)
+        vim.print(end_row)
+    end
+end
+
 --
 map("v", "<leader>f", format_table, { buffer = true, desc = "[F]ormat markdown table" })
