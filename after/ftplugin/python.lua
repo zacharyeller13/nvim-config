@@ -1,30 +1,30 @@
 -- Run python code in a new terminal
-vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
--- local ok, err = pcall(vim.api.nvim_cmd, { cmd = 'vsplit' }, {})
--- if not ok then
---     vim.print(ok, err)
--- else
---     vim.api.nvim_cmd({ cmd = 'terminal' }, {})
---     vim.print(vim.b.terminal_job_id)
--- end
---
--- vim.api.nvim_chan_send(7, 'python3\n')
--- vim.print(vim.api.nvim_list_chans())
---
--- local chan = 7
---
--- ---Send to term
--- ---@param cmd string
--- local send = function(cmd)
---     if cmd:sub(-1) ~= '\n' then
---         cmd = cmd .. '\n'
---     end
---     vim.api.nvim_chan_send(chan, cmd)
--- end
--- local com = [[
--- if (1 == 1):
---     print("hello world")
---
--- ]]
--- send(com)
--- vim.print(vim.api.nvim_get_chan_info(7))
+-- vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
+
+local term = require("custom.term")
+
+term.callback = function()
+    term:send("uv run python\n")
+end
+
+vim.keymap.set("n", "<space><space>t", function()
+    term:create_term()
+end, { buffer = true })
+
+vim.keymap.set("v", "<space><space>x", function()
+    local start = vim.fn.getpos("v")[2]
+    local end_idx = vim.fn.getpos(".")[2]
+
+    if start > end_idx then
+        start, end_idx = end_idx, start
+    end
+    local com = vim.api.nvim_buf_get_lines(0, start - 1, end_idx, true)
+    vim.print(com)
+
+    -- com, _ = com:gsub("^ +", "")
+    -- term:send(com)
+end, { buffer = true })
+
+vim.keymap.set("n", "<space>t", function()
+    term:toggle()
+end)
