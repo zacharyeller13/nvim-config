@@ -48,6 +48,7 @@ map("n", "<leader>toc", vim.cmd.ReplaceToc, opts)
 
 ---Get every table range so we can format it later
 local function test_treesitter()
+    ---@type vim.treesitter.Query
     local query = vim.treesitter.query.parse("markdown", "((pipe_table) @tbl)")
     vim.print(query)
     local parser = vim.treesitter.get_parser(0, "markdown")
