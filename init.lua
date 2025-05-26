@@ -87,7 +87,9 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
     vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-end ---@diagnostic disable-next-line: undefined-field
+end
+
+---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
@@ -318,7 +320,15 @@ require("lazy").setup({
         "neovim/nvim-lspconfig",
         dependencies = {
             -- Automatically install LSPs and related tools to stdpath for neovim
-            "williamboman/mason.nvim",
+            {
+                "williamboman/mason.nvim",
+                opts = {
+                    registries = {
+                        "github:mason-org/mason-registry",
+                        "github:Crashdummyy/mason-registry",
+                    },
+                },
+            },
             "williamboman/mason-lspconfig.nvim",
             "WhoIsSethDaniel/mason-tool-installer.nvim",
 
@@ -419,7 +429,7 @@ require("lazy").setup({
                     --    See `:help CursorHold` for information about when this is executed
                     --
                     -- When you move your cursor, the highlights will be cleared (the second autocommand).
-                    ---@type vim.lsp.Client
+                    ---@type vim.lsp.Client?
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
                     if
                         client
@@ -577,7 +587,7 @@ require("lazy").setup({
 
             -- Only install csharp_ls if dotnet is installed
             if vim.fn.executable("dotnet") == 1 then
-                servers = vim.tbl_deep_extend("force", servers, { csharp_ls = {} })
+                servers = vim.tbl_deep_extend("force", servers, { csharp_ls = {}, roslyn = {} })
             end
 
             -- Only install groovyls if groovy is installed
@@ -605,7 +615,6 @@ require("lazy").setup({
             --    :Mason
             --
             --  You can press `g?` for help in this menu
-            require("mason").setup()
 
             -- You can add other tools here that you want Mason to install
             -- for you, so that they are available from within Neovim.
