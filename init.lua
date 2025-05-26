@@ -587,7 +587,10 @@ require("lazy").setup({
 
             -- Only install csharp_ls if dotnet is installed
             if vim.fn.executable("dotnet") == 1 then
-                servers = vim.tbl_deep_extend("force", servers, { csharp_ls = {}, roslyn = {} })
+                servers = vim.tbl_deep_extend("force", servers, {
+                    -- csharp_ls = {},
+                    roslyn = {},
+                })
             end
 
             -- Only install groovyls if groovy is installed
