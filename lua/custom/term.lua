@@ -86,6 +86,14 @@ function M:toggle()
         return
     end
 
+    -- Occasionally the terminal buffer is not getting fully cleaned up
+    -- So we can double check that it does actually still exist
+    if not vim.fn.bufexists(self.bufnr) then
+        vim.notify("Terminal buffer has already been closed", vim.log.levels.WARN)
+        self.bufnr = nil
+        return
+    end
+
     -- Unhide term
     vim.api.nvim_open_win(self.bufnr, true, { split = self.split_dir })
 end
