@@ -20,13 +20,16 @@ local M = {
 M.__index = M
 
 ---Send a command to the open terminal channel
----@param cmd string
-function M:send(cmd)
+---@param cmds string[]
+function M:send(cmds)
     if not self.chan then
         vim.notify("No open terminal", vim.log.levels.INFO)
         return
     end
-    vim.api.nvim_chan_send(self.chan, cmd)
+
+    for _, cmd in ipairs(cmds) do
+        vim.api.nvim_chan_send(self.chan, cmd .. "\n")
+    end
 end
 
 ---Create a new terminal buffer in a split

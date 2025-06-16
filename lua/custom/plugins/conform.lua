@@ -33,6 +33,9 @@ return {
                 sql_formatter = {
                     prepend_args = { "--config", vim.json.encode(sql_config) },
                 },
+                xmlformatter = {
+                    prepend_args = { "--selfclose" },
+                },
             },
         },
     },

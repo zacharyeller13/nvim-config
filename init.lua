@@ -590,6 +590,11 @@ require("lazy").setup({
                 })
             end
 
+            -- Typescript
+            if vim.fn.executable("npm") == 1 then
+                servers = vim.tbl_deep_extend("force", servers, { ts_ls = {} })
+            end
+
             -- Only install groovyls if groovy is installed
             -- If we're looking to install it, may need to adjust the classpaths below
             if vim.fn.executable("groovy") == 1 then

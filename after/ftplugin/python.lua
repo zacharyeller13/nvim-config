@@ -4,7 +4,7 @@
 local term = require("custom.term")
 
 term.callback = function()
-    term:send("uv run python\n")
+    term:send({ "uv run python\n" })
 end
 
 vim.keymap.set("n", "<space><space>t", function()
@@ -22,7 +22,7 @@ vim.keymap.set("v", "<space><space>x", function()
     vim.print(com)
 
     -- com, _ = com:gsub("^ +", "")
-    -- term:send(com)
+    term:send(com)
 end, { buffer = true })
 
 vim.keymap.set("n", "<space>t", function()
