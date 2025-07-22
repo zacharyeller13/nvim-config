@@ -502,7 +502,8 @@ require("lazy").setup({
             --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
 
             -- With blink.cmp this can be simplified
-            local capabilities = require("blink.cmp").get_lsp_capabilities({}, true)
+            -- Should no longer need as should be setup automatically
+            -- local capabilities = require("blink.cmp").get_lsp_capabilities({}, true)
 
             -- Enable the following language servers
             --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -516,7 +517,7 @@ require("lazy").setup({
             local servers = {
                 gopls = {},
                 pyright = {
-                    capabilities = capabilities,
+                    -- capabilities = capabilities,
                     settings = {
                         -- Use Ruff's import organizer
                         pyright = {
@@ -600,13 +601,11 @@ require("lazy").setup({
             if vim.fn.executable("groovy") == 1 then
                 servers = vim.tbl_deep_extend("force", servers, {
                     groovyls = {
+                        filetypes = { "groovy" },
                         settings = {
                             groovy = {
                                 classpath = {
-                                    vim.fn.getenv("HOME")
-                                        .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21.jar",
-                                    vim.fn.getenv("HOME")
-                                        .. "/.sdkman/candidates/groovy/2.4.21/embeddable/groovy-all-2.4.21-indy.jar",
+                                    vim.fn.getenv("HOME") .. "/.sdkman/candidates/groovy/current/lib",
                                 },
                             },
                         },
@@ -632,19 +631,26 @@ require("lazy").setup({
             require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
             -- ensure installed and automatic enable are defaults
+            ---@type MasonLspconfigSettings
             require("mason-lspconfig").setup({
-                handlers = {
-                    function(server_name)
-                        local server = servers[server_name] or {}
-                        -- This handles overriding only values explicitly passed
-                        -- by the server configuration above. Useful when disabling
-                        -- certain features of an LSP (for example, turning off formatting for tsserver)
-                        server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-                        require("lspconfig")[server_name].setup(server)
-                        -- vim.lsp.config(server_name, server)
-                    end,
-                },
+                automatic_enable = vim.tbl_keys(servers or {}),
+
+                -- deprecated
+                -- handlers = {
+                --     function(server_name)
+                --         local server = servers[server_name] or {}
+                --         -- This handles overriding only values explicitly passed
+                --         -- by the server configuration above. Useful when disabling
+                --         -- certain features of an LSP (for example, turning off formatting for tsserver)
+                --         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+                --         require("lspconfig")[server_name].setup(server)
+                --     end,
+                -- },
             })
+
+            for server_name, config in pairs(servers) do
+                vim.lsp.config(server_name, config)
+            end
         end,
     },
 
