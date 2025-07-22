@@ -1,32 +1,34 @@
 local M = {
     {
-        'olimorris/codecompanion.nvim',
+        "olimorris/codecompanion.nvim",
         dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-treesitter/nvim-treesitter',
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
         },
         ---Initialize any hooks into codecompanion events
+        ---@module 'lazy'
         ---@param _ LazyPlugin
         init = function(_)
-            require('custom.plugins.codecompanion.hooks'):init()
+            require("custom.plugins.codecompanion.hooks"):init()
         end,
         opts = {
             strategies = {
                 chat = {
-                    adapter = 'llama3',
+                    -- adapter = "llama3",
+                    adapter = "copilot",
                 },
                 inline = {
-                    adapter = 'codellama',
+                    adapter = "copilot",
                 },
             },
             adapters = {
                 codellama = function()
-                    return require('codecompanion.adapters').extend('ollama', {
-                        name = 'codellama',
-                        formatted_name = 'CodeLlama',
+                    return require("codecompanion.adapters").extend("ollama", {
+                        name = "codellama",
+                        formatted_name = "CodeLlama",
                         schema = {
                             model = {
-                                default = 'codellama:13b',
+                                default = "codellama:13b",
                             },
                             num_ctx = {
                                 default = 8192,
@@ -35,12 +37,12 @@ local M = {
                     })
                 end,
                 llama3 = function()
-                    return require('codecompanion.adapters').extend('ollama', {
-                        name = 'llama3',
-                        formatted_name = 'Llama 3',
+                    return require("codecompanion.adapters").extend("ollama", {
+                        name = "llama3",
+                        formatted_name = "Llama 3",
                         schema = {
                             model = {
-                                default = 'llama3:latest',
+                                default = "llama3:latest",
                             },
                             num_ctx = {
                                 default = 8192,
@@ -49,12 +51,12 @@ local M = {
                     })
                 end,
                 deepseek = function()
-                    return require('codecompanion.adapters').extend('ollama', {
-                        name = 'deepseek',
-                        formatted_name = 'Deepseek-Coder',
+                    return require("codecompanion.adapters").extend("ollama", {
+                        name = "deepseek",
+                        formatted_name = "Deepseek-Coder",
                         schema = {
                             model = {
-                                default = 'deepseek-coder:6.7b',
+                                default = "deepseek-coder:6.7b",
                             },
                             num_ctx = {
                                 default = 8192,
