@@ -62,7 +62,7 @@ function M:create_term(split_dir)
     else
         vim.api.nvim_cmd({ cmd = "terminal" }, {})
         self.chan = vim.b.terminal_job_id
-        self.callback()
+        -- self.callback()
     end
 end
 
