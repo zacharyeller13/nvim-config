@@ -91,7 +91,7 @@ function M:toggle()
 
     -- Occasionally the terminal buffer is not getting fully cleaned up
     -- So we can double check that it does actually still exist
-    if not vim.fn.bufexists(self.bufnr) then
+    if vim.fn.bufexists(self.bufnr) == 0 then
         vim.notify("Terminal buffer has already been closed", vim.log.levels.WARN)
         self.bufnr = nil
         return
