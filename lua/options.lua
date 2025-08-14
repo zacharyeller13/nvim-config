@@ -8,6 +8,8 @@ vim.g.joplin_token =
 set.number = true
 -- Relative line numbers
 set.relativenumber = true
+-- Window border
+set.winborder = "rounded"
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 set.mouse = "a"
