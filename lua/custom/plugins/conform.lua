@@ -28,6 +28,7 @@ return {
                 xml = { "xmlformatter" },
                 -- I always have jq installed already, so no need to have a separate install for neovim
                 json = { "jq" },
+                go = { "gofmt" },
             },
             formatters = {
                 sql_formatter = {
