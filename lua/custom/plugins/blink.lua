@@ -106,6 +106,23 @@ return {
             require("luasnip.loaders.from_vscode").lazy_load()
 
             require("blink.cmp").setup(opts)
+
+            -- Need to cancel snippet completion sessions to prevent jumping back when hitting tab
+            -- https://github.com/L3MON4D3/LuaSnip/issues/258#event-16595304177
+            vim.api.nvim_create_autocmd("ModeChanged", {
+                group = "luasnip",
+                pattern = "*",
+                callback = function()
+                    if
+                        ((vim.v.event.old_mode == "s" or vim.v.event.old_mode == "i") and vim.v.event.new_mode == "n")
+                        and luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
+                        and not luasnip.session.jump_active
+                    then
+                        vim.notify(vim.v.event.old_mode .. " " .. vim.v.event.new_mode)
+                        luasnip.unlink_current()
+                    end
+                end,
+            })
         end,
     },
 }
