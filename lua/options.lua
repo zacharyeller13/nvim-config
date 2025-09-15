@@ -69,3 +69,6 @@ set.shiftwidth = 4
 
 -- Color Column for line lengths
 set.colorcolumn = "80"
+
+-- exrc for workspace-specific configs
+set.exrc = true
