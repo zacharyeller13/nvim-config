@@ -304,7 +304,7 @@ require("lazy").setup({
         "folke/lazydev.nvim",
         ft = "lua", -- only load on lua files
         dependencies = {
-            { "gonstoll/wezterm-types", lazy = true },
+            { "DrKJeff16/wezterm-types", lazy = true },
         },
         opts = {
             library = {

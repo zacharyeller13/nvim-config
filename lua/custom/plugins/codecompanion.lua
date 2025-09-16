@@ -22,48 +22,50 @@ local M = {
                 },
             },
             adapters = {
-                codellama = function()
-                    return require("codecompanion.adapters").extend("ollama", {
-                        name = "codellama",
-                        formatted_name = "CodeLlama",
-                        schema = {
-                            model = {
-                                default = "codellama:13b",
+                http = {
+                    codellama = function()
+                        return require("codecompanion.adapters").extend("ollama", {
+                            name = "codellama",
+                            formatted_name = "CodeLlama",
+                            schema = {
+                                model = {
+                                    default = "codellama:13b",
+                                },
+                                num_ctx = {
+                                    default = 8192,
+                                },
                             },
-                            num_ctx = {
-                                default = 8192,
+                        })
+                    end,
+                    llama3 = function()
+                        return require("codecompanion.adapters").extend("ollama", {
+                            name = "llama3",
+                            formatted_name = "Llama 3",
+                            schema = {
+                                model = {
+                                    default = "llama3:latest",
+                                },
+                                num_ctx = {
+                                    default = 8192,
+                                },
                             },
-                        },
-                    })
-                end,
-                llama3 = function()
-                    return require("codecompanion.adapters").extend("ollama", {
-                        name = "llama3",
-                        formatted_name = "Llama 3",
-                        schema = {
-                            model = {
-                                default = "llama3:latest",
+                        })
+                    end,
+                    deepseek = function()
+                        return require("codecompanion.adapters").extend("ollama", {
+                            name = "deepseek",
+                            formatted_name = "Deepseek-Coder",
+                            schema = {
+                                model = {
+                                    default = "deepseek-coder:6.7b",
+                                },
+                                num_ctx = {
+                                    default = 8192,
+                                },
                             },
-                            num_ctx = {
-                                default = 8192,
-                            },
-                        },
-                    })
-                end,
-                deepseek = function()
-                    return require("codecompanion.adapters").extend("ollama", {
-                        name = "deepseek",
-                        formatted_name = "Deepseek-Coder",
-                        schema = {
-                            model = {
-                                default = "deepseek-coder:6.7b",
-                            },
-                            num_ctx = {
-                                default = 8192,
-                            },
-                        },
-                    })
-                end,
+                        })
+                    end,
+                },
             },
         },
     },
