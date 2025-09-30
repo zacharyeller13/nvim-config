@@ -313,6 +313,7 @@ require("lazy").setup({
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
                 { path = "wezterm-types", mods = { "wezterm" } },
                 { path = "~/.config/wezterm", mods = { "wezterm" } },
+                { path = "~/.hammerspoon", words = { "hs%.ipc" } },
             },
         },
     },
