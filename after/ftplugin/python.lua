@@ -9,12 +9,12 @@ end
 
 vim.keymap.set("n", "<space><space>t", function()
     term:create_term()
-end, { buffer = true })
+end, { buffer = true, desc = "Spawn [T]erminal" })
 
 -- k is for kallback
 vim.keymap.set("n", "<space>k", function()
     term.callback()
-end, { buffer = true })
+end, { buffer = true, desc = "Fire Terminal Callback" })
 
 vim.keymap.set("v", "<space><space>x", function()
     local start = vim.fn.getpos("v")[2]
@@ -32,4 +32,4 @@ end, { buffer = true })
 
 vim.keymap.set("n", "<space>t", function()
     term:toggle()
-end)
+end, { desc = "Open [T]erminal" })
