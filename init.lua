@@ -314,6 +314,7 @@ require("lazy").setup({
                 { path = "wezterm-types", mods = { "wezterm" } },
                 { path = "~/.config/wezterm", mods = { "wezterm" } },
                 { path = "~/.hammerspoon", words = { "hs%.ipc" } },
+                { "nvim-dap-ui" },
             },
         },
     },
