@@ -21,10 +21,13 @@ vim.keymap.set("n", "<space>x", ":.lua<CR>")
 vim.keymap.set("v", "<space>x", ":lua<CR>")
 
 -- Setup to use mini.files
-vim.keymap.set("n", "<leader>pv", function()
-    -- Defined when in init.lua we run require('mini.files').setup()
-    MiniFiles.open()
-end, { desc = "Open Files (mini.files)" })
+-- vim.keymap.set("n", "<leader>pv", function()
+--     -- Defined when in init.lua we run require('mini.files').setup()
+--     -- MiniFiles.open()
+-- end, { desc = "Open Files (mini.files)" })
+
+-- Oil
+vim.keymap.set("n", "<leader>pv", vim.cmd.Oil, { desc = "Open Files (oil.nvim)" })
 
 -- Map the Escape cmd to jj in most contexts
 -- Already mapped to <C-[>
