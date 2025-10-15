@@ -23,6 +23,20 @@ local M = {
             },
             adapters = {
                 http = {
+                    qwen3coder = function()
+                        return require("codecompanion.adapters").extend("ollama", {
+                            name = "qwen3coder",
+                            formatted_name = "Qwen3 Coder",
+                            schema = {
+                                model = {
+                                    default = "qwen3-coder:latest",
+                                },
+                                num_ctx = {
+                                    default = 8192,
+                                },
+                            },
+                        })
+                    end,
                     codellama = function()
                         return require("codecompanion.adapters").extend("ollama", {
                             name = "codellama",

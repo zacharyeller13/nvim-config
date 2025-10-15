@@ -9,35 +9,35 @@ function M:start()
         vim.print(out.code)
         vim.print(out.signal)
     end
-    self.job = vim.system({ 'ollama', 'serve' }, {}, on_exit)
+    self.job = vim.system({ "ollama", "serve" }, {}, on_exit)
 end
 
 function M:init()
-    local group = vim.api.nvim_create_augroup('CodeCompanionHooks', {})
+    local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
     -- Needs to be 'User' since it is a plugin-defined autocmd
-    vim.api.nvim_create_autocmd({ 'User' }, {
-        pattern = 'CodeCompanionChatOpened',
+    vim.api.nvim_create_autocmd({ "User" }, {
+        pattern = "CodeCompanionChatAdapter",
         group = group,
         callback = function(ev)
             if not self.job then
                 vim.print(ev)
                 self:start()
             else
-                vim.print('ollama process: ' .. self.job.pid)
+                vim.print("ollama process: " .. self.job.pid)
             end
         end,
     })
 
     -- Kill the server if it's running when we leave Vim
-    vim.api.nvim_create_autocmd('VimLeavePre', {
+    vim.api.nvim_create_autocmd("VimLeavePre", {
         group = group,
         callback = function(ev)
             if self.job then
                 self.job:kill(2)
-                vim.print('Killed ollama server: ' .. self.job.pid)
+                vim.print("Killed ollama server: " .. self.job.pid)
             end
         end,
-        desc = 'Kills `ollama serve` command before exiting vim',
+        desc = "Kills `ollama serve` command before exiting vim",
     })
 end
 
