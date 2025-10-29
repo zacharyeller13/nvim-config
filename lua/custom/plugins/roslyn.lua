@@ -1,7 +1,7 @@
 if vim.fn.executable("dotnet") == 1 then
     return {
         "seblyng/roslyn.nvim",
-        ft = "cs",
+        -- ft = "cs",
         ---@module 'roslyn.config'
         ---@type RoslynNvimConfig
         opts = {
@@ -12,6 +12,7 @@ if vim.fn.executable("dotnet") == 1 then
                     end
                 end)
             end,
+            lock_target = true,
         },
     }
 else
