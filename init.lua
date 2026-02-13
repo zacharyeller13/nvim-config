@@ -13,6 +13,7 @@ vim.g.loaded_node_provider = 0
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
+vim.api.nvim_create_user_command("Q", "q!", { desc = "Force Quit" })
 -- [[ Setting options ]]
 require("options")
 -- Set highlight on search, but clear on pressing <Esc> or ctrl-c in normal mode
@@ -530,7 +531,7 @@ require("lazy").setup({
                         python = {
                             analysis = {
                                 -- ignore = { '*' },
-                                typeCheckingMode = "basic",
+                                typeCheckingMode = "standard",
                             },
                         },
                         -- Currently this does not work
