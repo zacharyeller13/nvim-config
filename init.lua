@@ -90,7 +90,6 @@ if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 end
 
----@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
@@ -100,7 +99,6 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
-    -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
     "NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
 
     -- NOTE: Plugins can also be added by using a table,
@@ -814,6 +812,8 @@ require("lazy").setup({
         },
     },
 })
+
+vim.notify = require("fidget").notify
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=4 sts=4 sw=4 et
