@@ -334,7 +334,6 @@ require("lazy").setup({
             "WhoIsSethDaniel/mason-tool-installer.nvim",
 
             -- Useful status updates for LSP.
-            -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
             { "j-hui/fidget.nvim", opts = {} },
         },
         config = function()
@@ -500,11 +499,14 @@ require("lazy").setup({
             -- LSP servers and clients are able to communicate to each other what features they support.
             --  By default, Neovim doesn't support everything that is in the LSP Specification.
             --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-            --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
+            --  So, we create new capabilities with blink, and then broadcast that to the servers.
 
-            -- With blink.cmp this can be simplified
-            -- Should no longer need as should be setup automatically
+            --  As of v0.11 this is unnecessary because blink does it automatically
             -- local capabilities = require("blink.cmp").get_lsp_capabilities({}, true)
+            -- vim.lsp.config("*", {
+            --     root_markers = { ".git" },
+            --     capabilities = capabilities,
+            -- })
 
             -- Enable the following language servers
             --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -515,11 +517,47 @@ require("lazy").setup({
             --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
             --  - settings (table): Override the default settings passed when initializing the server.
             --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+            ---@type vim.lsp.ClientConfig[]
             local servers = {
                 jsonls = {},
-                gopls = {},
+                gopls = {
+                    cmd = { "gopls" },
+                    settings = {
+                        gopls = {
+                            analyses = {
+                                SA4009 = true,
+                                unusedfunc = true,
+                            },
+                            usePlaceholders = true,
+                            staticcheck = true,
+                            hints = {
+                                assignVariableTypes = true,
+                                compositeLiteralFields = true,
+                                compositeLiteralTypes = true,
+                                constantValues = true,
+                                functionTypeParameters = true,
+                                parameterNames = true,
+                                rangeVariableTypes = true,
+                            },
+                        },
+                    },
+                },
+                ["golangci-lint-langserver"] = {
+                    cmd = { "golangci-lint-langserver" },
+                    root_markers = { ".git", "go.mod" },
+                    init_options = {
+                        command = {
+                            "golangci-lint",
+                            "run",
+                            "--output.json.path",
+                            "stdout",
+                            "--show-stats=false",
+                            "--issues-exit-code=1",
+                        },
+                    },
+                },
+                ["golangci-lint"] = {},
                 pyright = {
-                    -- capabilities = capabilities,
                     settings = {
                         -- Use Ruff's import organizer
                         pyright = {
@@ -549,16 +587,6 @@ require("lazy").setup({
                 bashls = {
                     filetypes = { "bash", "sh", "zsh" },
                 },
-                -- rust_analyzer = {},
-                -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-                --
-                -- Some languages (like typescript) have entire language plugins that can be useful:
-                --    https://github.com/pmizio/typescript-tools.nvim
-                --
-                -- But for many setups, the LSP (`tsserver`) will work just fine
-                -- tsserver = {},
-                --
-
                 lua_ls = {
                     -- cmd = {...},
                     -- filetypes { ...},
@@ -632,26 +660,9 @@ require("lazy").setup({
             })
             require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-            -- ensure installed and automatic enable are defaults
-            ---@type MasonLspconfigSettings
-            require("mason-lspconfig").setup({
-                automatic_enable = vim.tbl_keys(servers or {}),
-
-                -- deprecated
-                -- handlers = {
-                --     function(server_name)
-                --         local server = servers[server_name] or {}
-                --         -- This handles overriding only values explicitly passed
-                --         -- by the server configuration above. Useful when disabling
-                --         -- certain features of an LSP (for example, turning off formatting for tsserver)
-                --         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-                --         require("lspconfig")[server_name].setup(server)
-                --     end,
-                -- },
-            })
-
             for server_name, config in pairs(servers) do
                 vim.lsp.config(server_name, config)
+                vim.lsp.enable(server_name)
             end
         end,
     },
