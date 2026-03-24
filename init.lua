@@ -544,6 +544,7 @@ require("lazy").setup({
                 },
                 ["golangci-lint-langserver"] = {
                     cmd = { "golangci-lint-langserver" },
+                    filetypes = { "go", "gomod", "gowork", "gotmpl" },
                     root_markers = { ".git", "go.mod" },
                     init_options = {
                         command = {
