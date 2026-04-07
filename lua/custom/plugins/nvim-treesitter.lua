@@ -3,7 +3,7 @@ local M = { -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
     build = ":TSUpdate",
-    version = "*",
+    branch = "main",
     init = function()
         require("nvim-treesitter").setup({
             -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
