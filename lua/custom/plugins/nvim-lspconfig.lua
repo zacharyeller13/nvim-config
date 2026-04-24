@@ -63,7 +63,7 @@ local M = { -- LSP Configuration & Plugins
                 map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 
                 -- Find references for the word under your cursor.
-                map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+                map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 
                 -- Jump to the implementation of the word under your cursor.
                 --  Useful when your language has ways of declaring types without an actual implementation.
@@ -190,7 +190,7 @@ local M = { -- LSP Configuration & Plugins
         --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
         --  - settings (table): Override the default settings passed when initializing the server.
         --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-        ---@type vim.lsp.ClientConfig[]
+        ---@type table<string, vim.lsp.ClientConfig>
         local servers = {
             jsonls = {},
             gopls = {
@@ -286,6 +286,7 @@ local M = { -- LSP Configuration & Plugins
                     },
                 },
             },
+            systemd_lsp = {},
         }
 
         -- Only install csharp_ls/roslyn if dotnet is installed
@@ -306,6 +307,7 @@ local M = { -- LSP Configuration & Plugins
         if vim.fn.executable("groovy") == 1 then
             servers = vim.tbl_deep_extend("force", servers, {
                 groovyls = {
+                    cmd = { "groovy-language-server" },
                     filetypes = { "groovy" },
                     settings = {
                         groovy = {
