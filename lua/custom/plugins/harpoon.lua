@@ -1,7 +1,7 @@
 local module = {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
     config = function()
         -- Harpoon keymaps
         local harpoon = require("harpoon")
@@ -29,6 +29,9 @@ local module = {
         vim.keymap.set("n", "<C-l>", function()
             harpoon:list():select(4)
         end)
+
+        local harpoon_extensions = require("harpoon.extensions")
+        harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
     end,
 }
 

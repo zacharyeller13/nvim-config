@@ -25,6 +25,26 @@ local M = { -- Fuzzy Finder (files, lsp, etc)
         { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
     },
     config = function()
+        local actions = require("telescope.actions")
+        local actions_mt = require("telescope.actions.mt")
+
+        ---Custom action: send Telescope entries to harpoon
+        local custom_actions = actions_mt.transform_mod({
+            ---@param prompt_bufnr number
+            send_to_harpoon = function(prompt_bufnr)
+                ---@type Harpoon
+                local harpoon = require("harpoon")
+                local action_state = require("telescope.actions.state")
+                ---@type Picker
+                local picker = action_state.get_current_picker(prompt_bufnr)
+                for item in picker.manager:iter() do
+                    local harpoon_item = harpoon.config.default.create_list_item({}, item[1])
+                    harpoon:list():add(harpoon_item)
+                end
+                actions.close(prompt_bufnr)
+            end,
+        })
+
         -- Telescope is a fuzzy finder that comes with a lot of different things that
         -- it can fuzzy find! It's more than just a "file finder", it can search
         -- many different aspects of Neovim, your workspace, LSP, and more!
@@ -50,11 +70,12 @@ local M = { -- Fuzzy Finder (files, lsp, etc)
             -- You can put your default mappings / updates / etc. in here
             --  All the info you're looking for is in `:help telescope.setup()`
             --
-            -- defaults = {
-            --   mappings = {
-            --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-            --   },
-            -- },
+            defaults = {
+                mappings = {
+                    i = { ["<C-y>"] = custom_actions.send_to_harpoon },
+                    n = { ["<C-y>"] = custom_actions.send_to_harpoon },
+                },
+            },
             pickers = {
                 find_files = {
                     theme = "ivy",
