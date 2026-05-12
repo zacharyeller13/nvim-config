@@ -37,8 +37,18 @@ local M = { -- Fuzzy Finder (files, lsp, etc)
                 local action_state = require("telescope.actions.state")
                 ---@type Picker
                 local picker = action_state.get_current_picker(prompt_bufnr)
+                -- config.lua:197: attempt to call field 'get_root_dir' (a nil value) when using
+                -- the builtin.buffers picker
+                --
                 for item in picker.manager:iter() do
-                    local harpoon_item = harpoon.config.default.create_list_item({}, item[1])
+                    ---@type string This can depend on which picker we are using
+                    --- the buffers one we need the filename key, whereas others have the first index is the filename
+                    local item_name = item[1] or item.filename
+                    if not item_name then
+                        vim.notify("[Telescope-harpoon] no item name for this picker", vim.log.levels.ERROR)
+                        break
+                    end
+                    local harpoon_item = harpoon.config.default.create_list_item({}, item_name)
                     harpoon:list():add(harpoon_item)
                 end
                 actions.close(prompt_bufnr)
