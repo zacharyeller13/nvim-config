@@ -1,3 +1,6 @@
+-- UI2: experimental but default opts
+require("vim._core.ui2").enable()
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -71,16 +74,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         -- vim.highlight.on_yank()
     end,
 })
-
--- Creates an autocmd to give some syntax highlighting for hurl files
--- Should be unnecessary v0.10.0 and above
--- vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
---     group = vim.api.nvim_create_augroup('env_filetype', {}),
---     pattern = { '*.hurl' },
---     callback = function()
---         vim.opt_local.filetype = 'sh'
---     end,
--- })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
