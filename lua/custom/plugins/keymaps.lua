@@ -74,8 +74,8 @@ local function to_snake_case(s)
     return buf:get()
 end
 vim.keymap.set("v", "<S-s>", function()
-    local _, start_line, start_col, _ = unpack(vim.fn.getpos("v"))
-    local _, end_line, end_col, _ = unpack(vim.fn.getpos("."))
+    local _, start_line, start_col = unpack(vim.fn.getpos("v"))
+    local _, end_line, end_col = unpack(vim.fn.getpos("."))
     --Indexing is 0 based, so adjust accordingly
     --End col is exclusive, everything else inclusive
     if start_line ~= end_line then

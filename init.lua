@@ -173,6 +173,8 @@ require("lazy").setup({
                 { path = "~/.config/wezterm", mods = { "wezterm" } },
                 { path = "~/.hammerspoon", words = { "hs%.ipc" } },
                 { "nvim-dap-ui" },
+                { path = "blink.cmp", words = { "blink", "cmp" } },
+                { path = "fff", words = { "fff" } },
             },
         },
     },

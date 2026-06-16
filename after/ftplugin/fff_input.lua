@@ -1,5 +1,8 @@
 ---@module "fff.picker_ui"
-local picker_ui = require("fff.picker_ui")
+-- local picker_ui = require("fff.picker_ui")
+
+---@module "fff.picker_ui.picker_ui"
+local picker_ui = require("fff.picker_ui.picker_ui")
 
 ---Transform picker_ui.filtered_items into a list of relative paths
 ---@param filtered_items table[]?
