@@ -27,7 +27,7 @@ return {
                     return "make install_jsregexp"
                 end)(),
             },
-            { "MattiasMTS/cmp-dbee", ft = "sql", opts = {} },
+            { "zacharyeller13/blink-cmp-dbee", ft = "sql", branch = "feat/blink.cmp", opts = {} },
         },
 
         -- use a release tag to download pre-built binaries
@@ -36,7 +36,7 @@ return {
         -- Build for v2
         build = function()
             vim.notify("[blink.cmp] Building")
-            require("blink.cmp").build():wait(60000)
+            require("blink.cmp").build():pwait()
         end,
 
         ---@module 'blink.cmp'
@@ -62,7 +62,7 @@ return {
                 default = { "lsp", "path", "snippets", "buffer", "markdown", "lazydev" },
 
                 per_filetype = {
-                    sql = { "dbee", "buffer" },
+                    sql = { "dbee", "snippets", "buffer" },
                 },
 
                 -- Needed to setup lazydev as an available provider
@@ -77,7 +77,7 @@ return {
                         module = "render-markdown.integ.blink",
                         fallbacks = { "lsp" },
                     },
-                    dbee = { name = "cmp-dbee", module = "blink.compat.source" },
+                    dbee = { name = "Dbee", module = "cmp-dbee.blink" },
                 },
 
                 -- optionally disable cmdline completions
@@ -121,7 +121,6 @@ return {
                         and luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
                         and not luasnip.session.jump_active
                     then
-                        vim.notify(vim.v.event.old_mode .. " " .. vim.v.event.new_mode)
                         luasnip.unlink_current()
                     end
                 end,
