@@ -176,7 +176,11 @@ require("lazy").setup({
                 { path = "blink.cmp", words = { "blink", "cmp" } },
                 { path = "fff", words = { "fff" } },
             },
+            enabled = function(root_dir)
+                return not vim.uv.fs_stat(root_dir .. "/.luarc.json")
+            end,
         },
+        -- Disable when .luarc present
     },
     { -- You can easily change to a different colorscheme.
         -- Change the name of the colorscheme plugin below, and then

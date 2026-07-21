@@ -23,6 +23,7 @@ local M = { -- Fuzzy Finder (files, lsp, etc)
 
         -- Useful for getting pretty icons, but requires a Nerd Font.
         { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+        { "Marskey/telescope-sg" },
     },
     config = function()
         local actions = require("telescope.actions")
@@ -98,6 +99,14 @@ local M = { -- Fuzzy Finder (files, lsp, etc)
                 ["ui-select"] = {
                     require("telescope.themes").get_dropdown(),
                 },
+                ast_grep = {
+                    command = {
+                        "sg",
+                        "--json=stream",
+                    },
+                    grep_open_files = false,
+                    lang = nil,
+                },
             },
         })
 
@@ -107,6 +116,9 @@ local M = { -- Fuzzy Finder (files, lsp, etc)
         end
         if not pcall(require("telescope").load_extension, "ui-select") then
             vim.notify("[Telescope] ui-select not found", vim.log.levels.ERROR)
+        end
+        if not pcall(require("telescope").load_extension, "ast_grep") then
+            vim.notify("[Telescope] ast_grep not found", vim.log.levels.ERROR)
         end
 
         -- See `:help telescope.builtin`
