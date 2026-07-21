@@ -10,6 +10,7 @@ return {
         "saghen/blink.cmp",
         -- optional: provides snippets for the snippet source
         dependencies = {
+            "saghen/blink.lib",
             "rafamadriz/friendly-snippets",
             {
                 -- Inserted from nvim-cmp from Kickstart
@@ -26,15 +27,17 @@ return {
                     return "make install_jsregexp"
                 end)(),
             },
-            { "MattiasMTS/cmp-dbee", ft = "sql", opts = {} },
+            { "zacharyeller13/blink-cmp-dbee", ft = "sql", branch = "feat/blink.cmp", opts = {} },
         },
 
         -- use a release tag to download pre-built binaries
-        version = "*",
-        -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-        -- build = 'cargo build --release',
-        -- If you use nix, you can build from source using latest nightly rust with:
-        -- build = 'nix run .#build-plugin',
+        -- version = "*",
+
+        -- Build for v2
+        build = function()
+            vim.notify("[blink.cmp] Building")
+            require("blink.cmp").build():pwait()
+        end,
 
         ---@module 'blink.cmp'
         ---@type blink.cmp.Config
@@ -45,7 +48,7 @@ return {
                 -- Sets the fallback highlight groups to nvim-cmp's highlight groups
                 -- Useful for when your theme doesn't support blink.cmp
                 -- will be removed in a future release
-                use_nvim_cmp_as_default = true,
+                use_nvim_cmp_as_default = false,
                 -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
                 -- Adjusts spacing to ensure icons are aligned
                 nerd_font_variant = "mono",
@@ -59,7 +62,7 @@ return {
                 default = { "lsp", "path", "snippets", "buffer", "markdown", "lazydev" },
 
                 per_filetype = {
-                    sql = { "dbee", "buffer" },
+                    sql = { "dbee", "snippets", "buffer" },
                 },
 
                 -- Needed to setup lazydev as an available provider
@@ -74,7 +77,7 @@ return {
                         module = "render-markdown.integ.blink",
                         fallbacks = { "lsp" },
                     },
-                    dbee = { name = "cmp-dbee", module = "blink.compat.source" },
+                    dbee = { name = "Dbee", module = "cmp-dbee.blink" },
                 },
 
                 -- optionally disable cmdline completions
@@ -118,7 +121,6 @@ return {
                         and luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
                         and not luasnip.session.jump_active
                     then
-                        vim.notify(vim.v.event.old_mode .. " " .. vim.v.event.new_mode)
                         luasnip.unlink_current()
                     end
                 end,

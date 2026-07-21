@@ -1,40 +1,55 @@
+---@type LazyPluginSpec
 local M = { -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     build = ":TSUpdate",
-    branch = "master",
-    config = function()
-        -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-
-        ---@diagnostic disable-next-line: missing-fields
-        require("nvim-treesitter.configs").setup({
-            ensure_installed = {
-                "hurl",
-                "bash",
-                "python",
-                "c",
-                "diff",
-                "groovy",
-                "html",
-                "lua",
-                "markdown",
-                "markdown_inline",
-                "vim",
-                "vimdoc",
-                "xml",
-                "yaml",
-            },
-            -- Autoinstall languages that are not installed
-            auto_install = true,
-            highlight = { enable = true },
-            indent = { enable = true },
+    branch = "main",
+    init = function()
+        require("nvim-treesitter").setup({
+            -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
+            install_dir = vim.fn.stdpath("data") .. "/site",
         })
+        local ensure_installed = {
+            "hurl",
+            "bash",
+            "python",
+            "c",
+            "diff",
+            "groovy",
+            "go",
+            "html",
+            "json",
+            "lua",
+            "markdown",
+            "markdown_inline",
+            "sql",
+            "vim",
+            "vimdoc",
+            "xml",
+            "yaml",
+        }
+        -- Per docs this is a no-op if all are already installed so should be fine to not have to filter
+        -- Or check if they're installed
+        require("nvim-treesitter").install(ensure_installed)
 
-        -- There are additional nvim-treesitter modules that you can use to interact
-        -- with nvim-treesitter. You should go explore a few and see what interests you:
-        --
-        --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-        --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-        --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+        -- This list isn't going to change often enough to have to get it inside the autocmd
+        local available = require("nvim-treesitter").get_available()
+
+        vim.api.nvim_create_autocmd("FileType", {
+            callback = function(ev)
+                -- Auto-install
+                if vim.tbl_contains(available, ev.match) and not vim.tbl_contains(ensure_installed, ev.match) then
+                    require("nvim-treesitter").install(ev.match)
+                end
+
+                -- highlight yes
+                -- This needs to not throw errors for "invalid" filetypes (e.g. 'fidget', 'harpoon', etc.)
+                pcall(vim.treesitter.start)
+                -- indent yes
+                vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            end,
+            desc = "Enable Nvim-Treesitter features",
+        })
     end,
 }
 

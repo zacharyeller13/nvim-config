@@ -26,8 +26,23 @@ vim.keymap.set("v", "<space><space>x", function()
     local com = vim.api.nvim_buf_get_lines(0, start - 1, end_idx, true)
     vim.print(com)
 
+    local out = {}
+    local indent = 0
+    for i, line in ipairs(com) do
+        -- Find how indented
+        if i == 1 then
+            local spaces = line:match("^ +")
+            if spaces then
+                indent = #spaces
+                vim.notify("len spaces: " .. tostring(indent), vim.log.levels.INFO)
+            end
+        end
+        -- trim off indent
+        table.insert(out, line:sub(indent + 1))
+    end
+
     -- com, _ = com:gsub("^ +", "")
-    term:send(com)
+    term:send(out)
 end, { buffer = true })
 
 vim.keymap.set("n", "<space>t", function()
