@@ -19,6 +19,11 @@ local M = {
 }
 M.__index = M
 
+---@return TerminalState
+function M.new()
+    return setmetatable({}, M)
+end
+
 ---Send a command to the open terminal channel
 ---@param cmds string[]
 function M:send(cmds)
@@ -33,12 +38,18 @@ function M:send(cmds)
 end
 
 ---Create a new terminal buffer in a split
----@param split_dir? - The direction in which to open a new split
+---@param split_dir? #The direction in which to open a new split
 ---| 'left'
 ---| 'right'
 ---| 'above'
 ---| 'below'
-function M:create_term(split_dir)
+---@param cmd? string term:// buffer to open. defaults to "term://zsh"
+function M:create_term(split_dir, cmd)
+    cmd = cmd or "term://zsh"
+    if cmd:sub(1, 7) ~= "term://" then
+        vim.notify("cmd must be a 'term://' command", vim.log.levels.ERROR)
+    end
+
     local splits = { "left", "right", "above", "below" }
     if not split_dir then
         split_dir = "right"
@@ -60,7 +71,7 @@ function M:create_term(split_dir)
     if not ok then
         vim.notify("Error: " .. result, vim.log.levels.WARN)
     else
-        vim.api.nvim_cmd({ cmd = "terminal" }, {})
+        vim.api.nvim_cmd({ cmd = "edit", args = { cmd } }, {})
         self.chan = vim.b.terminal_job_id
         -- self.callback()
     end
@@ -114,4 +125,4 @@ function M._find_bufnr(chan_nr)
     return nil
 end
 
-return M
+return setmetatable({}, M)
