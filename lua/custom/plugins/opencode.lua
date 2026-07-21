@@ -6,9 +6,18 @@ return {
         ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
         { "folke/snacks.nvim", lazy = false, priority = 1000, opts = { input = {}, picker = {}, terminal = {} } },
     },
+    version = "*",
     config = function()
+        local term = require("custom.term").new()
+
         ---@type opencode.Opts
-        vim.g.opencode_opts = {}
+        vim.g.opencode_opts = {
+            server = {
+                start = function()
+                    term:create_term("right", "term://opencode --port")
+                end,
+            },
+        }
 
         -- Required for `opts.events.reload`.
         vim.o.autoread = true
@@ -18,7 +27,11 @@ return {
             require("opencode").select()
         end, { desc = "Execute opencode action…" })
         vim.keymap.set({ "n", "t" }, "<C-.>", function()
-            require("opencode").toggle()
+            if not term.chan then
+                term:create_term("right", "term://opencode --port")
+                return
+            end
+            term:toggle()
         end, { desc = "Toggle opencode" })
 
         vim.keymap.set({ "n", "x" }, "go", function()
