@@ -1,7 +1,7 @@
 -- Run python code in a new terminal
 -- vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
 
-local term = require("custom.term")
+local term = require("custom.term").new()
 
 term.callback = function()
     term:send({ "uv run python\n" })

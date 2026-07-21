@@ -1,4 +1,4 @@
-local term = require("custom.term")
+local term = require("custom.term").new()
 
 term.callback = function()
     term:send({ "source .env\n" })
