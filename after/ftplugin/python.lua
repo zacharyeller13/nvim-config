@@ -1,19 +1,22 @@
 -- Run python code in a new terminal
 -- vim.keymap.set('n', '<space><space>x', '<cmd>term python3 %<CR>')
 
-local term = require("custom.term").new()
+local term = require("custom.term")
+term.instances.python = term.instances.python or term.new()
 
-term.callback = function()
-    term:send({ "uv run python\n" })
+local inst = term.instances.python
+
+inst.callback = function()
+    inst:send({ "uv run python\n" })
 end
 
 vim.keymap.set("n", "<space><space>t", function()
-    term:create_term()
+    inst:create_term()
 end, { buffer = true, desc = "Spawn [T]erminal" })
 
 -- k is for kallback
 vim.keymap.set("n", "<space>k", function()
-    term.callback()
+    inst.callback()
 end, { buffer = true, desc = "Fire Terminal Callback" })
 
 vim.keymap.set("v", "<space><space>x", function()
@@ -42,9 +45,9 @@ vim.keymap.set("v", "<space><space>x", function()
     end
 
     -- com, _ = com:gsub("^ +", "")
-    term:send(out)
+    inst:send(out)
 end, { buffer = true })
 
 vim.keymap.set("n", "<space>t", function()
-    term:toggle()
+    inst:toggle()
 end, { desc = "Open [T]erminal" })

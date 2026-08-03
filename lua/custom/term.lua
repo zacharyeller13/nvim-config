@@ -11,11 +11,13 @@
 ---| 'below'
 ---Callback to run when opening a new terminal
 ---@field callback function
+---@field instances table<string, TerminalState>
 local M = {
     chan = nil,
     bufnr = nil,
     split_dir = "right",
     callback = function() end,
+    instances = {},
 }
 M.__index = M
 
@@ -72,23 +74,23 @@ function M:create_term(split_dir, cmd)
         vim.notify("Error: " .. result, vim.log.levels.WARN)
     else
         vim.api.nvim_cmd({ cmd = "edit", args = { cmd } }, {})
+        self.bufnr = vim.api.nvim_get_current_buf()
         self.chan = vim.b.terminal_job_id
-        -- self.callback()
     end
 end
 
 ---Toggles an existing terminal buffer/window
 function M:toggle()
-    if not self.chan then
+    if not self.bufnr then
         vim.notify("No open terminal", vim.log.levels.INFO)
         return
     end
 
-    if not self.bufnr then
-        self.bufnr = self._find_bufnr(self.chan)
+    if not self.chan then
+        self.chan = vim.b[self.bufnr].terminal_job_id
     end
 
-    if not self.bufnr then
+    if not self.chan then
         vim.notify("No open terminal", vim.log.levels.INFO)
         return
     end
@@ -125,4 +127,4 @@ function M._find_bufnr(chan_nr)
     return nil
 end
 
-return setmetatable({}, M)
+return M
