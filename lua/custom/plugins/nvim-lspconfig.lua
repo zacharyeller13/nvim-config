@@ -225,6 +225,7 @@ local M = { -- LSP Configuration & Plugins
                         "run",
                         "--enable=sqlclosecheck",
                         "--enable=reassign",
+                        "--enable=bodyclose",
                         "--output.json.path",
                         "stdout",
                         "--show-stats=false",
