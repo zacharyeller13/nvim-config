@@ -1,16 +1,19 @@
-local term = require("custom.term").new()
+local term = require("custom.term")
+term.instances.golang = term.instances.golang or term.new()
 
-term.callback = function()
-    term:send({ "source .env\n" })
+local inst = term.instances.golang
+
+inst.callback = function()
+    inst:send({ "source .env\n" })
 end
 
 vim.keymap.set("n", "<space><space>t", function()
-    term:create_term()
+    inst:create_term()
 end, { buffer = true })
 
 -- k is for kallback
 vim.keymap.set("n", "<space>k", function()
-    term.callback()
+    inst.callback()
 end, { buffer = true })
 
 vim.keymap.set("v", "<space><space>x", function()
@@ -24,9 +27,9 @@ vim.keymap.set("v", "<space><space>x", function()
     vim.print(com)
 
     -- com, _ = com:gsub("^ +", "")
-    term:send(com)
+    inst:send(com)
 end, { buffer = true })
 
 vim.keymap.set("n", "<space>t", function()
-    term:toggle()
+    inst:toggle()
 end)
