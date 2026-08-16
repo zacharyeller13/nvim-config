@@ -49,7 +49,8 @@ local M = { -- Fuzzy Finder (files, lsp, etc)
                         vim.notify("[Telescope-harpoon] no item name for this picker", vim.log.levels.ERROR)
                         break
                     end
-                    local harpoon_item = harpoon.config.default.create_list_item({}, item_name)
+                    local list = harpoon:list()
+                    local harpoon_item = list.config.create_list_item(list.config, item_name)
                     harpoon:list():add(harpoon_item)
                 end
                 actions.close(prompt_bufnr)

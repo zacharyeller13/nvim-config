@@ -39,7 +39,8 @@ vim.keymap.set({ "n", "i" }, "<C-y>", function()
         return
     end
     for _, item in ipairs(items) do
-        local harpoon_item = harpoon.config.default.create_list_item({}, item)
+        local list = harpoon:list()
+        local harpoon_item = list.config.create_list_item(list.config, item)
         harpoon:list():add(harpoon_item)
     end
     picker_ui.close()
