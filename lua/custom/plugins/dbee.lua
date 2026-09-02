@@ -1,17 +1,17 @@
 return {
     {
-        'kndndrj/nvim-dbee',
+        "zacharyeller13/nvim-dbee",
         dependencies = {
-            'MunifTanjim/nui.nvim',
+            "MunifTanjim/nui.nvim",
         },
         build = function()
             -- Install tries to automatically detect the install method.
             -- if it fails, try calling it with one of these parameters:
             --    "curl", "wget", "bitsadmin", "go"
-            require('dbee').install()
+            require("dbee").install()
         end,
         config = function()
-            require('dbee').setup(--[[optional config]])
+            require("dbee").setup(--[[optional config]])
         end,
     },
 }
