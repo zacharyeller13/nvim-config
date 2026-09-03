@@ -3,7 +3,7 @@ local buffer = require("string.buffer")
 --  See `:help vim.keymap.set()`
 
 -- Move quickfix list, apparently will be autoset in nvim 0.11
-if not vim.fn.has("nvim-0.11") == 1 then
+if vim.fn.has("nvim-0.11") ~= 1 then
     vim.keymap.set("n", "[q", function()
         if #vim.fn.getqflist() ~= 0 then
             return vim.cmd.cprev()
@@ -20,12 +20,11 @@ end
 -- So we rebind a different keymap to fix that using
 -- the fact that mcursors are in the nvim.multicursor namespace as extmarks
 -- and there is not built-in to clear them other than the <C-L> default
--- NOTE: gQ keybind will not work after this clearing
 if vim.fn.has("nvim-0.13") == 1 then
     vim.keymap.set("n", "<leader>mc", function()
         local namespaces = vim.api.nvim_get_namespaces()
         for name, id in pairs(namespaces) do
-            if name:starts("nvim.multicursor") then
+            if name == "nvim.multicursor" then
                 vim.api.nvim_buf_clear_namespace(0, id, 0, -1)
             end
         end
