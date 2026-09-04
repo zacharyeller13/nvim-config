@@ -143,6 +143,7 @@ local M = { -- LSP Configuration & Plugins
 
         -- diagnostic info
         vim.diagnostic.config({
+            update_in_insert = false,
             severity_sort = true,
             float = { border = "rounded", source = "if_many" },
             underline = { severity = vim.diagnostic.severity.ERROR },
@@ -154,20 +155,21 @@ local M = { -- LSP Configuration & Plugins
                     [vim.diagnostic.severity.HINT] = "󰌶 ",
                 },
             } or {},
-            virtual_text = {
-                source = "if_many",
-                spacing = 2,
-                format = function(diagnostic)
-                    local diagnostic_message = {
-                        [vim.diagnostic.severity.ERROR] = diagnostic.message,
-                        [vim.diagnostic.severity.WARN] = diagnostic.message,
-                        [vim.diagnostic.severity.INFO] = diagnostic.message,
-                        [vim.diagnostic.severity.HINT] = diagnostic.message,
-                    }
-                    return diagnostic_message[diagnostic.severity]
+            virtual_text = true,
+            virtual_lines = false,
+            jump = {
+                on_jump = function(_, bufnr)
+                    vim.diagnostic.open_float({
+                        bufnr = bufnr,
+                        focus = false,
+                        scope = "cursor",
+                    })
                 end,
             },
         })
+        -- Diagnostic keymaps
+        vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
+        vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
         -- LSP servers and clients are able to communicate to each other what features they support.
         --  By default, Neovim doesn't support everything that is in the LSP Specification.
@@ -190,7 +192,7 @@ local M = { -- LSP Configuration & Plugins
         --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
         --  - settings (table): Override the default settings passed when initializing the server.
         --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-        ---@type table<string, vim.lsp.ClientConfig>
+        ---@type table<string, vim.lsp.Config>
         local servers = {
             jsonls = {},
             gopls = {
