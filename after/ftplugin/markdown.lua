@@ -24,7 +24,17 @@ local function format_table(args)
     if start > end_idx then
         start, end_idx = end_idx, start
     end
-    vim.api.nvim_cmd({ range = { start, end_idx }, cmd = "!", args = { "tr -s ' ' | column -t -s '|' -o '|'" } }, {})
+    if vim.uv.os_uname().sysname == "Darwin" then
+        vim.api.nvim_cmd(
+            { range = { start, end_idx }, cmd = "!", args = { "tr -s ' ' | sed 's/|/@|/g' | column -s '@' -t" } },
+            {}
+        )
+    else
+        vim.api.nvim_cmd(
+            { range = { start, end_idx }, cmd = "!", args = { "tr -s ' ' | column -t -s '|' -o '|'" } },
+            {}
+        )
+    end
 
     local key = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
     vim.api.nvim_feedkeys(key, "v", false)
