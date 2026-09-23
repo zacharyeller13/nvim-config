@@ -148,6 +148,8 @@ require("lazy").setup({
                 -- See the configuration section for more details
                 -- Load luvit types when the `vim.uv` word is found
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                { path = "${3rd}/busted/library", words = { "busted" } },
+                { path = "${3rd}/luassert/library", words = { "busted" } },
                 { path = "wezterm-types", mods = { "wezterm" } },
                 { path = "~/.config/wezterm", mods = { "wezterm" } },
                 { path = "~/.hammerspoon", words = { "hs%.ipc" } },
@@ -279,6 +281,8 @@ require("lazy").setup({
 })
 
 vim.notify = require("fidget").notify
+
+require("custom.devops").setup()
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=4 sts=4 sw=4 et
