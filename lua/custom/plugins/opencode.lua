@@ -6,15 +6,23 @@ return {
         ---@module 'snacks'
         { "folke/snacks.nvim", lazy = false, priority = 1000, opts = { input = {}, picker = {} } },
     },
-    version = "*",
+    -- version = "*", -- main supports opencode v2
     config = function()
         local term = require("custom.term").new()
+        local oc_cmd = "term://opencode --port"
+        local v = vim.system({ "opencode", "--version" }, { text = true }):wait(1000)
+        if v.code ~= 0 then
+            error(("error getting opencode version: %s"):format(v.stderr))
+        end
+        if v.stdout:match("v2") then
+            oc_cmd = "term://opencode"
+        end
 
         ---@type opencode.Opts
         vim.g.opencode_opts = {
             server = {
                 start = function()
-                    term:create_term("right", "term://opencode --port")
+                    term:create_term("right", oc_cmd)
                 end,
             },
         }
@@ -28,7 +36,7 @@ return {
         end, { desc = "Execute opencode action…" })
         vim.keymap.set({ "n", "t" }, "<C-.>", function()
             if not term.chan then
-                term:create_term("right", "term://opencode --port")
+                term:create_term("right", oc_cmd)
                 return
             end
             term:toggle()
