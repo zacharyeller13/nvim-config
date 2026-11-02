@@ -3,6 +3,7 @@ local function new_jq_buffer()
     vim.bo[bufnr].buftype = "prompt"
     vim.bo[bufnr].filetype = "jq"
     vim.api.nvim_open_win(bufnr, true, { split = "right" })
+    vim.cmd.startinsert()
     return bufnr
 end
 vim.keymap.set("n", "<leader>jq", function()
