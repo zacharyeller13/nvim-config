@@ -1,56 +1,85 @@
-return {
-    "NickvanDyke/opencode.nvim",
+-- local prev = {
+--     "NickvanDyke/opencode.nvim",
+--     dependencies = {
+--         -- Recommended for `ask()` and `select()`.
+--         -- Required for `snacks` provider.
+--         ---@module 'snacks'
+--         { "folke/snacks.nvim", lazy = false, priority = 1000, opts = { input = {}, picker = {} } },
+--     },
+--     -- version = "*", -- main supports opencode v2
+--     config = function()
+--         local term = require("custom.term").new()
+--         local oc_cmd = "term://opencode --port"
+--         local v = vim.system({ "opencode", "--version" }, { text = true }):wait()
+--         if v.code ~= 0 then
+--             error(("error getting opencode version: %s"):format(v.stderr))
+--         end
+--         if v.stdout:match("v2") then
+--             oc_cmd = "term://opencode"
+--         end
+--
+--         ---@type opencode.Opts
+--         vim.g.opencode_opts = {
+--             server = {
+--                 start = function()
+--                     term:create_term("right", oc_cmd)
+--                 end,
+--             },
+--         }
+--
+--         -- Required for `opts.events.reload`.
+--         vim.o.autoread = true
+--
+--         -- Recommended/example keymaps.
+--         vim.keymap.set({ "n", "x" }, "<leader>o", function()
+--             require("opencode").select()
+--         end, { desc = "Execute opencode action…" })
+--         vim.keymap.set({ "n", "t" }, "<C-.>", function()
+--             if not term.chan then
+--                 term:create_term("right", oc_cmd)
+--                 return
+--             end
+--             term:toggle()
+--         end, { desc = "Toggle opencode" })
+--
+--         vim.keymap.set({ "n", "x" }, "go", function()
+--             return require("opencode").operator("@this ")
+--         end, { desc = "Add range to opencode", expr = true })
+--         vim.keymap.set("n", "goo", function()
+--             return require("opencode").operator("@this ") .. "_"
+--         end, { desc = "Add line to opencode", expr = true })
+--
+--         -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o…".
+--         vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
+--         vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
+--     end,
+-- }
+
+local M = {
+    "sudo-tee/opencode.nvim",
     dependencies = {
-        -- Recommended for `ask()` and `select()`.
-        -- Required for `snacks` provider.
+        -- Optional: choose a picker you already use, or keep vim.ui.select.
         ---@module 'snacks'
         { "folke/snacks.nvim", lazy = false, priority = 1000, opts = { input = {}, picker = {} } },
+        "nvim-telescope/telescope.nvim",
+        -- Optional: use your configured completion engine, or built-in completion.
+        "saghen/blink.cmp",
+        "MeanderingProgrammer/render-markdown.nvim",
     },
-    -- version = "*", -- main supports opencode v2
-    config = function()
-        local term = require("custom.term").new()
-        local oc_cmd = "term://opencode --port"
-        local v = vim.system({ "opencode", "--version" }, { text = true }):wait(1000)
-        if v.code ~= 0 then
-            error(("error getting opencode version: %s"):format(v.stderr))
-        end
-        if v.stdout:match("v2") then
-            oc_cmd = "term://opencode"
-        end
-
-        ---@type opencode.Opts
-        vim.g.opencode_opts = {
-            server = {
-                start = function()
-                    term:create_term("right", oc_cmd)
-                end,
+    ---@type OpencodeConfig
+    ---@diagnostic disable-next-line: missing-fields
+    opts = {
+        preferred_picker = "telescope",
+        default_mode = "plan",
+        keymap = {
+            editor = {
+                ["<C-.>"] = {
+                    "toggle",
+                    desc = "Toggle Opencode window",
+                },
             },
-        }
-
-        -- Required for `opts.events.reload`.
-        vim.o.autoread = true
-
-        -- Recommended/example keymaps.
-        vim.keymap.set({ "n", "x" }, "<leader>o", function()
-            require("opencode").select()
-        end, { desc = "Execute opencode action…" })
-        vim.keymap.set({ "n", "t" }, "<C-.>", function()
-            if not term.chan then
-                term:create_term("right", oc_cmd)
-                return
-            end
-            term:toggle()
-        end, { desc = "Toggle opencode" })
-
-        vim.keymap.set({ "n", "x" }, "go", function()
-            return require("opencode").operator("@this ")
-        end, { desc = "Add range to opencode", expr = true })
-        vim.keymap.set("n", "goo", function()
-            return require("opencode").operator("@this ") .. "_"
-        end, { desc = "Add line to opencode", expr = true })
-
-        -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o…".
-        vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
-        vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
-    end,
+        },
+    },
 }
+
+return M

@@ -14,7 +14,11 @@ return {
         dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
-        opts = { file_types = { "markdown", "codecompanion", "joplin.markdown" }, latex = { enabled = false } },
-        ft = { "markdown", "codecompanion", "joplin.markdown" },
+        opts = {
+            file_types = { "markdown", "joplin.markdown", "opencode_output" },
+            latex = { enabled = false },
+            anti_conceal = { enabled = false },
+        },
+        ft = { "markdown", "joplin.markdown", "opencode_output" },
     },
 }
